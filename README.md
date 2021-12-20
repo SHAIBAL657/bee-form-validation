@@ -4,7 +4,7 @@
 
     ~ Install go and beego
     ~ Set GOPATH
-    ~ Download https://github.com/SHAIBAL657/bee-form-validation and https://github.com/SHAIBAL657/beego-rest-api project.
+    ~ Download https://github.com/SHAIBAL657/bee-form-validation and https://github.com/SHAIBAL657/beego-rest-api/sara project.
     ~ Both project should be run on individual port
 
 ### How to test
