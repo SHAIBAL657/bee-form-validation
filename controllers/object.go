@@ -54,6 +54,12 @@ func (u *User) Valid(v *validation.Validation) {
 	}
 
 }
+
+func (o *ObjectController) Get() {
+
+	o.TplName = "index.tpl"
+}
+
 func (o *ObjectController) Post() {
 	o.TplName = "index.tpl"
 	flash := beego.NewFlash()
