@@ -46,7 +46,10 @@
       {{end}}
       </div>
       <div class="col">
-      <input type="text" class="form-control" placeholder="Date of Birth(mm/dd/yyyy)" name="dob" required>
+      <input type="text" class="form-control" placeholder="Date of Birth(dd/mm/yyyy)" name="dob" required>
+      {{if .Date}}
+      {{.flash.success}}
+      {{end}}
       </div>
   </div>
     <div class="row  m-4" style="text-align:center;">
@@ -56,7 +59,6 @@
       {{.flash.success}}
       {{end}}
       </div>
-
   </div>
   </div>
   </form>

@@ -45,12 +45,18 @@ func (u *User) Valid(v *validation.Validation) {
 	rem := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 	em := rem.MatchString(u.Email)
 
+	red := regexp.MustCompile("(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)")
+	date := red.MatchString(u.DoB)
+
 	if !ph {
 		v.SetError("Phone", "Format supported 8801XXXXXXX")
 	}
 
 	if !em {
 		v.SetError("Email", "Format supported any@any.any")
+	}
+	if !date {
+		v.SetError("Date", "Format supported dd/mm/yyyy")
 	}
 
 }
@@ -90,35 +96,30 @@ func (o *ObjectController) Post() {
 				o.Data["Fname"] = "Can't contain 'admin' in Name"
 				flash.Error("Can't contain 'admin' in Name")
 				flash.Store(&o.Controller)
-				return
 			}
 			if err.Key == "LName" {
 				o.Data["Lname"] = "Can't contain 'admin' in Name"
 				flash.Error("Can't contain 'admin' in Name")
 				flash.Store(&o.Controller)
-				return
-
+			}
+			if err.Key == "Date" {
+				o.Data["Date"] = "Date invalid! (dd/mm/yyyy)"
+				flash.Success("Date invalid! (dd/mm/yyyy)")
+				flash.Store(&o.Controller)
 			}
 			if err.Key == "Email" {
 				o.Data["Email"] = "Email invalid! (any@any.any)"
 				flash.Notice("Email invalid! (any@any.any)")
 				flash.Store(&o.Controller)
-				return
-
 			}
 			if err.Key == "Phone" {
 				o.Data["Phone"] = "Phone number invalid! (8801XXXXXXX)"
 				flash.Warning("Phone number invalid! (8801XXXXXXX)")
 				flash.Store(&o.Controller)
-				return
-
 			}
 
 		}
 	} else {
-		o.Data["Success"] = "Succesfully data sent to API"
-		flash.Success("Succesfully data sent to API")
-		flash.Store(&o.Controller)
 		fmt.Println(fname, lname, phone, email, pass, dob, hash)
 		postBody, _ := json.Marshal(map[string]string{
 			"FirstName": fname,
@@ -144,15 +145,23 @@ func (o *ObjectController) Post() {
 		}
 		sb := string(body)
 		log.Printf(sb)
+		if strings.Contains(sb, "email") {
+			o.Data["Success"] = "Succesfully data sent to API"
+			flash.Success("Duplicate email (Reply from API)")
+			flash.Store(&o.Controller)
 
-		fmt.Println("All OKAY", sb)
+		} else if strings.Contains(sb, "Invalid") {
+			o.Data["Success"] = "Succesfully data sent to API"
+			flash.Success("Invalid Input")
+			flash.Store(&o.Controller)
+		} else {
+			o.Data["Success"] = "Succesfully data sent to API"
+			flash.Success("Succesfully data sent to API")
+			flash.Store(&o.Controller)
+			fmt.Println("All OKAY", sb)
+		}
+
 	}
-	// var ob models.Object
-	// json.Unmarshal(o.Ctx.Input.RequestBody, &ob)
-	// objectemail := models.AddOne(ob)
-	// o.Data["json"] = map[string]string{"Email": ob.Email}
-	// o.ServeJSON()
-	//Objects[object.Email] = &object
 	fmt.Println("ALL GOOD")
 }
 
