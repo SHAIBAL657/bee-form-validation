@@ -21,7 +21,7 @@
     ~ Validate data before sending to api (http://localhost:8080/v1/object)
     ~ Validate data in api for duplicate data and database response,then on success or error response back to http://localhost:8081/
     
-### Create DATABASE postgresql
+### Create DATABASE postgresql (PGADMIN)
 
     createdb:=CREATE TABLE IF NOT EXISTS public."USER"
     (
